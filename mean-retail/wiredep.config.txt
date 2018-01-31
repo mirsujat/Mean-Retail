@@ -1,0 +1,108 @@
+require('wiredep')({
+  directory: 'the directory of your Bower packages.', // default: '.bowerrc'.directory || bower_components 
+  bowerJson: 'your bower.json file contents.',        // default: require('./bower.json') 
+  src: ['filepaths', 'and/even/globs/*.html', 'to take', 'control of.'],
+ 
+  // ----- Advanced Configuration ----- 
+  // All of the below settings are for advanced configuration, to 
+  // give your project support for additional file types and more 
+  // control. 
+  // 
+  // Out of the box, wiredep will handle HTML files just fine for 
+  // JavaScript and CSS injection. 
+ 
+  cwd: 'path/to/where/we/are/pretending/to/be',
+ 
+  dependencies: true,    // default: true 
+  devDependencies: true, // default: false 
+  includeSelf: true,     // default: false 
+ 
+  exclude: [ /jquery/, 'bower_components/modernizr/modernizr.js' ],
+ 
+  ignorePath: /string or regexp to ignore from the injected filepath/,
+ 
+  overrides: {
+    // see `Bower Overrides` section below. 
+    // 
+    // This inline object offers another way to define your overrides if 
+    // modifying your project's `bower.json` isn't an option. 
+  },
+ 
+  onError: function(err) {
+    // If not overridden, an error will throw. 
+ 
+    // err = Error object. 
+    // err.code can be: 
+    //   - "PKG_NOT_INSTALLED" (a Bower package was not found) 
+    //   - "BOWER_COMPONENTS_MISSING" (cannot find the `bower_components` directory) 
+  },
+ 
+  onFileUpdated: function(filePath) {
+    // filePath = 'name-of-file-that-was-updated' 
+  },
+ 
+  onPathInjected: function(fileObject) {
+    // fileObject.block = 'type-of-wiredep-block' ('js', 'css', etc) 
+    // fileObject.file = 'name-of-file-that-was-updated' 
+    // fileObject.path = 'path-to-file-that-was-injected' 
+  },
+ 
+  onMainNotFound: function(pkg) {
+    // pkg = 'name-of-bower-package-without-main' 
+  },
+ 
+  fileTypes: {
+    fileExtension: {
+      block: /match the beginning-to-end of a bower block in this type of file/,
+      detect: {
+        typeOfBowerFile: /match the way this type of file is included/
+      },
+      replace: {
+        typeOfBowerFile: '<format for this {{filePath}} to be injected>',
+        anotherTypeOfBowerFile: function (filePath) {
+          return '<script class="random-' + Math.random() + '" src="' + filePath + '"></script>';
+        }
+      }
+    },
+ 
+    // defaults: 
+    html: {
+      block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
+      detect: {
+        js: /<script.*src=['"]([^'"]+)/gi,
+        css: /<link.*href=['"]([^'"]+)/gi
+      },
+      replace: {
+        js: '<script src="{{filePath}}"></script>',
+        css: '<link rel="stylesheet" href="{{filePath}}" />'
+      }
+    },
+ 
+    less: {
+      block: /(([ \t]*)\/\/\s*bower:*(\S*))(\n|\r|.)*?(\/\/\s*endbower)/gi,
+      detect: {
+        css: /@import\s['"](.+css)['"]/gi,
+        less: /@import\s['"](.+less)['"]/gi
+      },
+      replace: {
+        css: '@import "{{filePath}}";',
+        less: '@import "{{filePath}}";'
+      }
+    },
+ 
+    sass: {
+      block: /(([ \t]*)\/\/\s*bower:*(\S*))(\n|\r|.)*?(\/\/\s*endbower)/gi,
+      detect: {
+        css: /@import\s(.+css)/gi,
+        sass: /@import\s(.+sass)/gi,
+        scss: /@import\s(.+scss)/gi
+      },
+      replace: {
+        css: '@import {{filePath}}',
+        sass: '@import {{filePath}}',
+        scss: '@import {{filePath}}'
+      }
+    }
+
+
+    }
