@@ -1,6 +1,6 @@
 # MEAN Retail
 
-#### A mini e-commerce application 
+#### A mini e-commerce application build with Angular JS,
 
 Users of this application will be able to browse through products, add products to their cart, and even check out using the Stripe API.
 This application is built with REST API, a desktop web client using AngularJS, and even a mobile app using the Ionic framework.
